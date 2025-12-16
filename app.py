@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 st.title("Multi-Factor Trading Strategy (MFT) Web App")
@@ -101,4 +102,5 @@ if uploaded_file:
         file_name="processed_stock_data.csv",
         mime="text/csv"
     )
+
 
