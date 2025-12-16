@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.graph_objects as go
 
 st.title("Multi-Factor Trading Strategy (MFT) Web App")
 
@@ -75,40 +74,20 @@ if uploaded_file:
     st.subheader("Sample Data with Signals")
     st.dataframe(data.tail(20))
 
-    # 1️⃣1️⃣ Plot Buy/Sell signals
-    st.subheader("Stock Price with Buy/Sell Signals")
+    # 1️⃣1️⃣ Stock Price Chart with Signals (Streamlit-native)
+    st.subheader("Stock Price with Signals")
+    
+    # Price line
+    st.line_chart(data[['Close']])
+    
+    # Optional: Show buy/sell as separate tables
+    st.subheader("Buy Signals")
+    st.dataframe(data[data['Signal'] == 1][['Close', 'Signal_Label']])
+    
+    st.subheader("Sell Signals")
+    st.dataframe(data[data['Signal'] == -1][['Close', 'Signal_Label']])
 
-    fig = go.Figure()
-
-    # Close Price
-    fig.add_trace(go.Scatter(
-        x=data.index, y=data['Close'],
-        mode='lines',
-        name='Close Price'
-    ))
-
-    # Buy signals
-    fig.add_trace(go.Scatter(
-        x=data[data['Signal'] == 1].index,
-        y=data[data['Signal'] == 1]['Close'],
-        mode='markers',
-        marker=dict(color='green', size=10, symbol='triangle-up'),
-        name='Buy Signal'
-    ))
-
-    # Sell signals
-    fig.add_trace(go.Scatter(
-        x=data[data['Signal'] == -1].index,
-        y=data[data['Signal'] == -1]['Close'],
-        mode='markers',
-        marker=dict(color='red', size=10, symbol='triangle-down'),
-        name='Sell Signal'
-    ))
-
-    fig.update_layout(height=500, width=900, template='plotly_white')
-    st.plotly_chart(fig)
-
-    # 1️⃣2️⃣ Option to download processed CSV
+    # 1️⃣2️⃣ Download Processed CSV
     st.subheader("Download Processed Data with Signals")
     csv = data.to_csv(index=True).encode('utf-8')
     st.download_button(
